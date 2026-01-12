@@ -1,10 +1,9 @@
-import express, {Request, Response, Router} from 'express';
-import v1Routes from './v1';
-const routes: Router = express.Router();
+import { Router } from "express";
+import v1Routes from "./v1";
 
-routes.get('/', (req: Request, res: Response) => {
-  res.send('Welcome');
-});
+const router = Router();
 
-routes.use('/v1', v1Routes);
-export default routes;
+// TERUSKAN SEMUA REQUEST KE v1
+router.use(v1Routes);
+
+export default router;

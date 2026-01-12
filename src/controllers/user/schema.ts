@@ -1,16 +1,39 @@
 import * as yup from 'yup';
+import { UserRole } from '../auth/schema';
 
-export const userSchema = yup.object().shape({
-  fullname: yup.string().required('Fullname is required'),
-  email: yup.string().email('Invalid email').required('Email is required'),
+/* =========================
+   USER SCHEMA (DATABASE)
+   ========================= */
+export const userSchema = yup.object({
+  id: yup
+    .string()
+    .required(),
+
+  fullname: yup
+    .string()
+    .required(),
+
+  email: yup
+    .string()
+    .email()
+    .required(),
+
   password: yup
     .string()
-    .min(8, 'Password min 8 character')
-    .required('Password is required'),
+    .required(),
+
+  role: yup
+    .mixed<UserRole>()
+    .oneOf(['siswa', 'guru', 'orang-tua', 'waka'])
+    .required(),
+
+  // 🔑 hanya siswa yang punya NIS
+  nis: yup
+    .string()
+    .optional(),
+
+  createdAt: yup.date().optional(),
+  updatedAt: yup.date().optional(),
 });
 
-export type UserType = yup.InferType<typeof userSchema> & {
-  userId: string;
-  createdAt?: Date;
-  updatedAt?: Date;
-};
+export type UserType = yup.InferType<typeof userSchema>;
